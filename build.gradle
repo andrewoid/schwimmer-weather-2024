@@ -21,3 +21,4 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+println("APIKEY=" + System.getenv("apikey"))
