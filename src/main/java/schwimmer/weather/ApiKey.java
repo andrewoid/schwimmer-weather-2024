@@ -21,7 +21,7 @@ public class ApiKey {
                 key = properties.getProperty("apikey");
             }
             else {
-                key = System.getenv("apikey");
+                key = System.getenv("APIKEY");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
