@@ -19,8 +19,7 @@ public class ApiKey {
             if (in != null) {
                 properties.load(in);
                 key = properties.getProperty("apikey");
-            }
-            else {
+            } else {
                 key = System.getenv("apikey");
             }
         } catch (IOException e) {
