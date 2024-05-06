@@ -1,5 +1,6 @@
 package schwimmer.weather;
 
+import com.andrewoid.ApiKey;
 import org.junit.jupiter.api.Test;
 import schwimmer.weather.json.CurrentWeather;
 
@@ -15,7 +16,7 @@ class OpenWeatherMapServiceTest {
 
         // when
         CurrentWeather currentWeather = service.currentWeather(
-                apiKey.toString(),
+                apiKey.get(),
                 "Passaic",
                 "standard"
         ).blockingGet();
