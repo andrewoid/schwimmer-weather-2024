@@ -6,6 +6,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import schwimmer.weather.OpenWeatherMapService;
 import schwimmer.weather.OpenWeatherMapServiceFactory;
 import schwimmer.weather.json.current.CurrentWeather;
+import schwimmer.weather.json.forecast.ForecastWeather;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -19,7 +20,7 @@ import java.net.URL;
 
 public class WeatherFrame extends JFrame {
 
-    private JTextField locationField = new JTextField();
+    private JTextField locationField = new JTextField("New York");
     private JTextArea weatherResults = new JTextArea();
 
     private JLabel icon = new JLabel();
@@ -37,24 +38,46 @@ public class WeatherFrame extends JFrame {
         panel.setLayout(new BorderLayout());
         panel.add(icon, BorderLayout.WEST);
         locationField.addActionListener(e -> {
-            // tells Rx to request the data on a background Thread
-            service.currentWeather(apiKey.get(), locationField.getText(), "imperial")
-                    .subscribeOn(Schedulers.io())
-                    // tells Rx to handle the response on Swing's main Thread
-                    .observeOn(SwingSchedulers.edt())
-                    //.observeOn(AndroidSchedulers.mainThread()) // Instead use this on Android only
-                    .subscribe(
-                            this::handleResponse,
-                            Throwable::printStackTrace);
+            loadWeatherData();
         });
         panel.add(locationField, BorderLayout.NORTH);
         weatherResults.setEditable(false);
         panel.add(weatherResults, BorderLayout.CENTER);
 
         setContentPane(panel);
+
+        loadWeatherData();
     }
 
-    private void handleResponse(CurrentWeather response) {
+    private void loadWeatherData() {
+        service.forecast(apiKey.get(), locationField.getText(), "imperial")
+                .subscribeOn(Schedulers.io())
+                // tells Rx to handle the response on Swing's main Thread
+                .observeOn(SwingSchedulers.edt())
+                //.observeOn(AndroidSchedulers.mainThread()) // Instead use this on Android only
+                .subscribe(
+                        this::handleForecastWeatherResponse,
+                        Throwable::printStackTrace);
+
+        // tells Rx to request the data on a background Thread
+        service.currentWeather(apiKey.get(), locationField.getText(), "imperial")
+                .subscribeOn(Schedulers.io())
+                // tells Rx to handle the response on Swing's main Thread
+                .observeOn(SwingSchedulers.edt())
+                //.observeOn(AndroidSchedulers.mainThread()) // Instead use this on Android only
+                .subscribe(
+                        this::handleCurrentWeatherResponse,
+                        Throwable::printStackTrace);
+    }
+
+    public void handleForecastWeatherResponse(ForecastWeather response) {
+        for (int i = 0; i < response.list.length; i++) {
+            CurrentWeather currentWeather = response.list[i];
+            weatherResults.append("\n" + currentWeather.getDateTime() + " " + currentWeather.rainProbability);
+        }
+    }
+
+    private void handleCurrentWeatherResponse(CurrentWeather response) {
         weatherResults.setText(
                 "Temperature: " + response.main.temperature +
                         "\nDescription: " + response.weather[0].description
