@@ -1,4 +1,4 @@
-package schwimmer.weather.json;
+package schwimmer.weather.json.current;
 
 public class Weather {
     public String main;

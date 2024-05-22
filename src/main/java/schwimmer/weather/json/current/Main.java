@@ -1,4 +1,4 @@
-package schwimmer.weather.json;
+package schwimmer.weather.json.current;
 
 import com.google.gson.annotations.SerializedName;
 

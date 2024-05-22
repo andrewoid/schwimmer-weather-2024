@@ -5,7 +5,7 @@ import hu.akarnokd.rxjava3.swing.SwingSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import schwimmer.weather.OpenWeatherMapService;
 import schwimmer.weather.OpenWeatherMapServiceFactory;
-import schwimmer.weather.json.CurrentWeather;
+import schwimmer.weather.json.current.CurrentWeather;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
