@@ -7,16 +7,22 @@ import schwimmer.weather.OpenWeatherMapService;
 import schwimmer.weather.OpenWeatherMapServiceFactory;
 import schwimmer.weather.json.CurrentWeather;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.BorderLayout;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class WeatherFrame extends JFrame {
 
     private JTextField locationField = new JTextField();
     private JTextArea weatherResults = new JTextArea();
+
+    private JLabel icon = new JLabel();
 
     private ApiKey apiKey = new ApiKey();
 
@@ -29,6 +35,7 @@ public class WeatherFrame extends JFrame {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
+        panel.add(icon, BorderLayout.WEST);
         locationField.addActionListener(e -> {
             // tells Rx to request the data on a background Thread
             service.currentWeather(apiKey.get(), locationField.getText(), "imperial")
@@ -49,8 +56,15 @@ public class WeatherFrame extends JFrame {
 
     private void handleResponse(CurrentWeather response) {
         weatherResults.setText(
-                "Temperature: " + response.main.temperature
+                "Temperature: " + response.main.temperature +
+                        "\nDescription: " + response.weather[0].description
         );
+        String url = "https://openweathermap.org/img/wn/" + response.weather[0].icon + "@2x.png";
+        try {
+            icon.setIcon(new ImageIcon(new URL(url)));
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void main(String[] args) {

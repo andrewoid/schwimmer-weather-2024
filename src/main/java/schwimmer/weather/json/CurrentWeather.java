@@ -5,5 +5,7 @@ public class CurrentWeather {
     public Main main;
 
     public Wind wind;
+    
+    public Weather weather[];
 
 }

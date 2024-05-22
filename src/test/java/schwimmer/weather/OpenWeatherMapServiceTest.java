@@ -4,7 +4,8 @@ import com.andrewoid.ApiKey;
 import org.junit.jupiter.api.Test;
 import schwimmer.weather.json.CurrentWeather;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class OpenWeatherMapServiceTest {
 
@@ -28,6 +29,10 @@ class OpenWeatherMapServiceTest {
         assertNotEquals(0, currentWeather.wind.degrees);
         assertNotEquals(0, currentWeather.wind.gust);
         assertNotEquals(0, currentWeather.wind.speed);
+        assertNotNull(currentWeather.weather);
+        assertNotNull(currentWeather.weather[0].description);
+        assertNotNull(currentWeather.weather[0].icon);
+        assertNotNull(currentWeather.weather[0].main);
     }
 
 }
