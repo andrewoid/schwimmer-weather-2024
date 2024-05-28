@@ -2,17 +2,19 @@ package schwimmer.weather;
 
 import com.andrewoid.ApiKey;
 import org.junit.jupiter.api.Test;
-import schwimmer.weather.json.CurrentWeather;
+import schwimmer.weather.json.current.CurrentWeather;
+import schwimmer.weather.json.forecast.ForecastWeather;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class OpenWeatherMapServiceTest {
+    private ApiKey apiKey = new ApiKey();
+    private OpenWeatherMapService service = new OpenWeatherMapServiceFactory().getService();
 
     @Test
     public void currentWeather() {
         // given
-        ApiKey apiKey = new ApiKey();
-        OpenWeatherMapService service = new OpenWeatherMapServiceFactory().getService();
 
         // when
         CurrentWeather currentWeather = service.currentWeather(
@@ -28,6 +30,26 @@ class OpenWeatherMapServiceTest {
         assertNotEquals(0, currentWeather.wind.degrees);
         assertNotEquals(0, currentWeather.wind.gust);
         assertNotEquals(0, currentWeather.wind.speed);
+        assertNotNull(currentWeather.weather);
+        assertNotNull(currentWeather.weather[0].description);
+        assertNotNull(currentWeather.weather[0].icon);
+        assertNotNull(currentWeather.weather[0].main);
+    }
+
+    @Test
+    public void forecast() {
+        // given
+
+        // when
+        ForecastWeather forecastWeather = service.forecast(
+                apiKey.get(),
+                "Passaic",
+                "standard"
+        ).blockingGet();
+
+        // then
+        assertNotNull(forecastWeather.list);
+        assertNotEquals(0, forecastWeather.list[0].dt);
     }
 
 }
