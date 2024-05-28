@@ -79,8 +79,8 @@ public class WeatherFrame extends JFrame {
 
     private void handleCurrentWeatherResponse(CurrentWeather response) {
         weatherResults.setText(
-                "Temperature: " + response.main.temperature +
-                        "\nDescription: " + response.weather[0].description
+                "Temperature: " + response.main.temperature
+                        + "\nDescription: " + response.weather[0].description
         );
         String url = "https://openweathermap.org/img/wn/" + response.weather[0].icon + "@2x.png";
         try {
